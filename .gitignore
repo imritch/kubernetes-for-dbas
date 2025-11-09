@@ -1,0 +1,26 @@
+# Kubernetes specific
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Secrets (never commit these!)
+*-secret.yaml
+secrets/
+*.key
+*.pem
+*.crt
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+Thumbs.db
+.DS_Store

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rolling-app
+  labels:
+    app: rolling-app
+spec:
+  replicas: 6
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2         # Max pods above desired count during update
+      maxUnavailable: 1   # Max pods unavailable during update
+  selector:
+    matchLabels:
+      app: rolling-app
+  template:
+    metadata:
+      labels:
+        app: rolling-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.23
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-managed-app
+  labels:
+    app: resource-managed-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: resource-managed-app
+  template:
+    metadata:
+      labels:
+        app: resource-managed-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        resources:
+          # Requests: Guaranteed resources (minimum)
+          requests:
+            memory: "128Mi"   # Kubernetes reserves this memory
+            cpu: "250m"       # 250 millicores = 0.25 CPU
+          # Limits: Maximum resources allowed
+          limits:
+            memory: "256Mi"   # OOMKilled if exceeded
+            cpu: "500m"       # Throttled if exceeded
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+# DBA Note: For databases, set requests = limits for guaranteed QoS
+# This is similar to setting min and max server memory equal in SQL Server
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: guaranteed-qos-app
+  labels:
+    app: guaranteed-qos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: guaranteed-qos
+  template:
+    metadata:
+      labels:
+        app: guaranteed-qos
+    spec:
+      containers:
+      - name: app
+        image: nginx:latest
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"  # Same as requests = Guaranteed QoS
+            cpu: "500m"      # Same as requests = Guaranteed QoS

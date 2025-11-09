@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liveness-app
+  labels:
+    app: liveness-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: liveness-app
+  template:
+    metadata:
+      labels:
+        app: liveness-app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 15  # Wait before first check
+          periodSeconds: 10        # Check every 10 seconds
+          timeoutSeconds: 2        # Probe timeout
+          failureThreshold: 3      # Restart after 3 failures
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
