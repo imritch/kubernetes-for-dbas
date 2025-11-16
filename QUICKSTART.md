@@ -309,6 +309,9 @@ kubectl delete deployment <name>    # Delete deployment
 kubectl delete -f <file.yaml>       # Delete from YAML
 
 # Namespaces
+kubectl get namespaces              # List all namespaces (or: kubectl get ns)
+kubectl get namespaces -o wide      # List with more details
+kubectl describe namespace <name>   # Detailed namespace info
 kubectl create namespace <name>     # Create namespace
 kubectl get pods -n <namespace>     # View in namespace
 kubectl config set-context --current --namespace=<name>  # Set default

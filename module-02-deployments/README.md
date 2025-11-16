@@ -39,6 +39,35 @@ Deployment → ReplicaSet → Pods
 - ReplicaSet = Replica set at a specific point in time
 - Pods = Individual replica instances
 
+### Understanding Replicas
+
+When you specify `--replicas=3` (or `replicas: 3` in YAML), this tells Kubernetes to create and maintain **3 pods** running your application.
+
+**How replicas work:**
+1. The **Deployment** creates a **ReplicaSet**
+2. The **ReplicaSet** ensures exactly **3 pods** are running at all times
+3. If a pod crashes or gets deleted, the ReplicaSet automatically creates a new one to maintain the count
+
+**Key differences from SQL Server Always On:**
+- In Kubernetes, all replicas can serve traffic simultaneously (load-balanced)
+- There's no concept of "primary" vs "secondary" at the pod level - all pods are identical
+- Scaling is instant: `kubectl scale deployment app --replicas=5` immediately creates 2 more pods
+- All replicas are active-active, not active-passive
+
+**Example:**
+```bash
+kubectl create deployment hello-k8s --image=nginx:latest --replicas=3
+# Creates: 1 Deployment → 1 ReplicaSet → 3 Pods
+
+kubectl get pods
+# You'll see 3 pods named something like:
+# hello-k8s-7d4b9c8f6d-abc12
+# hello-k8s-7d4b9c8f6d-def34
+# hello-k8s-7d4b9c8f6d-ghi56
+```
+
+**So remember: replicas = number of pods running your application**
+
 ### Health Checks
 
 Kubernetes provides two types of health checks:
