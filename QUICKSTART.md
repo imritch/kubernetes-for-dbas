@@ -404,16 +404,19 @@ alias kw='kubectl get pods -w'
 ### Kubectl Context and Config
 
 ```bash
-# View current context
+# View current context (shows which context is active)
 kubectl config current-context
 
-# View all contexts
+# View all contexts (shows all available contexts with * marking the current one)
 kubectl config get-contexts
+
+# View current context configuration details (cluster, user, namespace)
+kubectl config view --minify
 
 # Switch context (if you have multiple clusters)
 kubectl config use-context docker-desktop
 
-# View config
+# View full config
 kubectl config view
 ```
 
